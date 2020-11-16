@@ -37,6 +37,8 @@ Feature: William Hill Login Test On Initial Load
 
     Scenario: User should not be able to log in with empty credentials
         Given there is an element "#submit" on the page
+        And   the element "#user" not contains any text
+        And   the element "#password" not contains any text
         When  I click on the element "#submit"
         Then  I expect that element "//*[@class='mwc-modal-content']" contains the text "Please enter a valid email address"
         And   I expect that element "//*[@class='mwc-modal-content']" contains the text "Password is required"
