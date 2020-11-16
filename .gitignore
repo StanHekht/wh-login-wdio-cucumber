@@ -1,5 +1,6 @@
 # Logs
 *.log
+.env
 
 # Dependency directory
 # Commenting this out is preferred by some people, see

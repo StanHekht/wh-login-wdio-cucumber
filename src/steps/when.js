@@ -14,6 +14,10 @@ import selectOptionByIndex from '../support/action/selectOptionByIndex';
 import setCookie from '../support/action/setCookie';
 import setInputField from '../support/action/setInputField';
 import setPromptText from '../support/action/setPromptText';
+import setCorrectUsername from '../support/action/setCorrectUsername';
+import setCorrectPassword from '../support/action/setCorrectPassword';
+import setIncorrectUsername from '../support/action/setIncorrectUsername';
+import setIncorrectPassword from '../support/action/setIncorrectPassword';
 
 const { When } = require('cucumber');
 
@@ -95,4 +99,24 @@ When(
 When(
     /^I move to element "([^"]*)?"(?: with an offset of (\d+),(\d+))*$/,
     moveTo
+);
+
+When (
+    /^I (add|set) correct user email to the inputfield "([^"]*)?"$/,
+    setCorrectUsername
+);
+
+When (
+    /^I (add|set) correct user password to the inputfield "([^"]*)?"$/,
+    setCorrectPassword
+);
+
+When (
+    /^I (add|set) incorrect user email to the inputfield "([^"]*)?"$/,
+    setIncorrectUsername
+);
+
+When (
+    /^I (add|set) incorrect user password to the inputfield "([^"]*)?"$/,
+    setIncorrectPassword
 );
