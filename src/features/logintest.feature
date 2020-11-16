@@ -10,7 +10,7 @@ Feature: William Hill Login Test On Initial Load
 
     Scenario: The login modal should open and contain all required elements
         Given there is an element "[class='mwc-modal-content']" on the page
-        Then   I expect that element "#modalTitle" contains the text "SIGN IN"
+        Then  I expect that element "#modalTitle" contains the text "SIGN IN"
         And   I expect that element "//mwc-login-header//i" does exist
         And   I expect that element "[class='mwc-close']" does exist
         And   I expect that element "#user" does exist
