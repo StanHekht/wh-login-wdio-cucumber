@@ -20,8 +20,8 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './src/features/**/*.feature',
-        // './test/specs/**/*.js'
+        // './src/features/**/*.feature',
+        './test/specs/**/*.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -119,7 +119,7 @@ exports.config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'cucumber',
+    framework: 'mocha',
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
