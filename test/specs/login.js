@@ -1,3 +1,4 @@
+const LoginPage = require('../../pageobjects/login.page');
 
 let faker = require('faker');
 require('dotenv').config();
@@ -5,139 +6,91 @@ require('dotenv').config();
 describe('WH Login Modal', () => {
     before('should visit homepage and open login modal', () => {
         browser.url('/');
-        let elem = $("[data-qa='neogames-login']");
-        elem.waitForClickable();
-        elem.click();
+        LoginPage.loginButton.waitForClickable();
+        LoginPage.loginButton.click();
     })
 
     it('should have login modal expanded', () => {
-        let loginModalElem = $("[class='mwc-modal-content']");
-        expect(loginModalElem).toBeDisplayed();
+        expect(LoginPage.loginModalElem).toBeDisplayed();
     })
 
     it('should have all modal elements present', () => {
-        let modalTitleElem = $("#modalTitle");
-        expect(modalTitleElem).toHaveText("SIGN IN");
-
-        let chatIconElem = $("//mwc-login-header//i");
-        expect(chatIconElem).toBeDisplayed();
-
-        let closeButtonElem = $("[class='mwc-close']");
-        expect(chatIconElem).toBeDisplayed();
-
-        let userNameInputElem = $("#user");
-        expect(userNameInputElem).toBeDisplayed();
-
-        let userPasswordInputElem = $("#password");
-        expect(userPasswordInputElem).toBeDisplayed();
-
-        let modalContentElem = $("//*[@class='mwc-modal-content']");
-        expect(modalContentElem).toHaveTextContaining("Forgot Email?");
-        expect(modalContentElem).toHaveTextContaining("Forgot Password?");
-        expect(modalContentElem).toHaveTextContaining("Don't have");
-        expect(modalContentElem).toHaveTextContaining("Bet With");
-
-        let submitButtonElem = $("#submit");
-        expect(submitButtonElem).toBeDisplayed();
-        expect(submitButtonElem).toHaveText("SIGN IN");
+        expect(LoginPage.modalTitleElem).toHaveText("SIGN IN");
+        expect(LoginPage.chatIconElem).toBeDisplayed();
+        expect(LoginPage.closeButtonElem).toBeDisplayed();
+        expect(LoginPage.userNameInputElem).toBeDisplayed();
+        expect(LoginPage.userPasswordInputElem).toBeDisplayed();
+        expect(LoginPage.modalContentElem).toHaveTextContaining("Forgot Email?");
+        expect(LoginPage.modalContentElem).toHaveTextContaining("Forgot Password?");
+        expect(LoginPage.modalContentElem).toHaveTextContaining("Don't have");
+        expect(LoginPage.modalContentElem).toHaveTextContaining("Bet With");
+        expect(LoginPage.submitButtonElem).toBeDisplayed();
+        expect(LoginPage.submitButtonElem).toHaveText("SIGN IN");
     })
 
     it('should have user input field focused', () => {
-        let userNameInputElem = $("#user");
-        let userPasswordInputElem = $("#password");
-        expect(userNameInputElem).toBeFocused();
-        expect(userPasswordInputElem).not.toBeFocused();
+        expect(LoginPage.userNameInputElem).toBeFocused();
+        expect(LoginPage.userPasswordInputElem).not.toBeFocused();
     })
 
     it('should have user and passwod input fields blank with placeholder text', () => {
-        let userNameInputElem = $("#user");
-        let userPasswordInputElem = $("#password");
-
-        expect(userNameInputElem).toHaveValue("");
-        expect(userPasswordInputElem).toHaveValue("");
-
-        expect(userNameInputElem).toHaveAttribute("placeholder", "Email:");
-        expect(userPasswordInputElem).toHaveAttribute("placeholder", "Password:");
+        expect(LoginPage.userNameInputElem).toHaveValue("");
+        expect(LoginPage.userPasswordInputElem).toHaveValue("");
+        expect(LoginPage.userNameInputElem).toHaveAttribute("placeholder", "Email:");
+        expect(LoginPage.userPasswordInputElem).toHaveAttribute("placeholder", "Password:");
     })
 
     it('have remember me checkbox works as designed', () => {
-        let checkboxElem = $("[type='checkbox']");
-        let checkboxLinkElem = $("//*[@class='mwc-checkbox']/i");
+        expect(LoginPage.checkboxElem).toHaveAttribute("aria-checked", "false");
 
-        expect(checkboxElem).toHaveAttribute("aria-checked", "false");
+        LoginPage.checkboxLinkElem.waitForClickable();
+        LoginPage.checkboxLinkElem.click();
 
-        checkboxLinkElem.waitForClickable();
-        checkboxLinkElem.click();
-
-        expect(checkboxElem).toHaveAttribute("aria-checked", "true");
+        expect(LoginPage.checkboxElem).toHaveAttribute("aria-checked", "true");
     })
 
     it('should not allow user to log in with blank credentials', () => {
-        let userNameInputElem = $("#user");
-        let userPasswordInputElem = $("#password");
-        let submitButtonElem = $("#submit");
-        let modalContentElem = $("//*[@class='mwc-modal-content']");
+        LoginPage.submitButtonElem.waitForClickable();
+        LoginPage.submitButtonElem.click();
 
-        submitButtonElem.waitForClickable();
-        submitButtonElem.click();
-
-        expect(modalContentElem).toHaveTextContaining("Please enter a valid email address");
-        expect(modalContentElem).toHaveTextContaining("Password is required");
+        expect(LoginPage.modalContentElem).toHaveTextContaining("Please enter a valid email address");
+        expect(LoginPage.modalContentElem).toHaveTextContaining("Password is required");
     })
 
     it('should not allow user to log in with incorrect credentials', () => {
-        let userNameInputElem = $("#user");
-        let userPasswordInputElem = $("#password");
-        let submitButtonElem = $("#submit");
-        let errorMessageElem = $("[class='mwc-form-error-message-text']");
+        LoginPage.userNameInputElem.setValue(faker.internet.email());
+        LoginPage.userPasswordInputElem.setValue(faker.internet.password());
 
-        userNameInputElem.setValue(faker.internet.email());
-        userPasswordInputElem.setValue(faker.internet.password());
+        LoginPage.submitButtonElem.waitForClickable();
+        LoginPage.submitButtonElem.click();
 
-        submitButtonElem.waitForClickable();
-        submitButtonElem.click();
+        expect(LoginPage.errorMessageElem).toHaveTextContaining("You have entered an incorrect");
 
-        expect(errorMessageElem).toHaveTextContaining("You have entered an incorrect");
-
-        userNameInputElem.clearValue();
-        userPasswordInputElem.clearValue();
+        LoginPage.userNameInputElem.clearValue();
+        LoginPage.userPasswordInputElem.clearValue();
     })
 
     it('should allow user to log in with correct credentials', () => {
-        let userNameInputElem = $("#user");
-        let userPasswordInputElem = $("#password");
-        let submitButtonElem = $("#submit");
-        let myAccountElem = $("[class='myAccountLabel']");
+        LoginPage.userNameInputElem.setValue(process.env.EMAIL);
+        LoginPage.userPasswordInputElem.setValue(process.env.PASSWORD);
 
-        userNameInputElem.setValue(process.env.EMAIL);
-        userPasswordInputElem.setValue(process.env.PASSWORD);
+        LoginPage.submitButtonElem.waitForClickable();
+        LoginPage.submitButtonElem.click();
 
-        submitButtonElem.waitForClickable();
-        submitButtonElem.click();
-
-        expect(myAccountElem).toHaveTextContaining("My Account");
+        expect(LoginPage.myAccountElem).toHaveTextContaining("My Account");
     })
 
     it('should allow user to log out', () => {
-        let userNameInputElem = $("#user");
-        let userPasswordInputElem = $("#password");
-        let submitButtonElem = $("#submit");
-        let myAccountElem = $("[class='myAccountLabel']");
-        let logoutHeaderElem = $('#modalTitle');
-        let logoutCloseElem = $("[class*='mwc-close']");
+        LoginPage.accountButton.waitForClickable();
+        LoginPage.accountButton.click();
 
-        let accountButton = $('[data-qa="neogames-account"]');
-        accountButton.waitForClickable();
-        accountButton.click();
+        LoginPage.logoutButton.waitForClickable();
+        LoginPage.logoutButton.click();
 
-        let logoutButton = $('[data-qa="neogames-logout"]');
-        logoutButton.waitForClickable();
-        logoutButton.click();
+        expect(LoginPage.logoutHeaderElem).toHaveText("LOGGED OUT");
 
-        expect(logoutHeaderElem).toHaveText("LOGGED OUT");
-
-        logoutCloseElem.waitForClickable();
-        logoutCloseElem.click();
+        LoginPage.logoutCloseElem.waitForClickable();
+        LoginPage.logoutCloseElem.click();
 
         browser.pause(3000);
     })
